@@ -3,22 +3,16 @@
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
     
-    <title>Hexo</title>
+    <title>simplify-usage-of-thread-pool | Hexo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="工作中经常涉及异步任务，通常是使用多线程技术，比如线程池ThreadPoolExecutor，它的执行规则如下：  在Springboot中对其进行了简化处理，只需要配置一个类型为java.util.concurrent.TaskExecutor或其子类的bean，并在配置类或直接在程序入口类上声明注解@EnableAsync。 调用也简单，在由Spring管理的对象的方法上标注注解@Async，">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://cnblogs.com/yw0219/2019/04/16/simplify-usage-of-thread-pool/index.html">
+    <meta property="og:type" content="article">
+<meta property="og:title" content="simplify-usage-of-thread-pool">
+<meta property="og:url" content="https://cnblogs.com/yw0219/2019/04/16/simplify-usage-of-thread-pool-1/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="工作中经常涉及异步任务，通常是使用多线程技术，比如线程池ThreadPoolExecutor，它的执行规则如下：  在Springboot中对其进行了简化处理，只需要配置一个类型为java.util.concurrent.TaskExecutor或其子类的bean，并在配置类或直接在程序入口类上声明注解@EnableAsync。 调用也简单，在由Spring管理的对象的方法上标注注解@Async，">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://img2018.cnblogs.com/blog/871373/201904/871373-20190414211139904-821339818.png">
-<meta property="og:image" content="https://images2018.cnblogs.com/blog/871373/201804/871373-20180412224049311-1073700734.png">
-<meta property="og:updated_time" content="2019-04-16T07:47:08.947Z">
+<meta property="og:updated_time" content="2019-04-16T09:53:31.175Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="工作中经常涉及异步任务，通常是使用多线程技术，比如线程池ThreadPoolExecutor，它的执行规则如下：  在Springboot中对其进行了简化处理，只需要配置一个类型为java.util.concurrent.TaskExecutor或其子类的bean，并在配置类或直接在程序入口类上声明注解@EnableAsync。 调用也简单，在由Spring管理的对象的方法上标注注解@Async，">
-<meta name="twitter:image" content="https://img2018.cnblogs.com/blog/871373/201904/871373-20190414211139904-821339818.png">
+<meta name="twitter:title" content="simplify-usage-of-thread-pool">
     
 
     
@@ -211,31 +205,40 @@
 </aside>
 
             
-            <section id="main"><article id="post-simplify-usage-of-thread-pool" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-simplify-usage-of-thread-pool-1" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            simplify-usage-of-thread-pool
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/yw0219/2019/04/16/simplify-usage-of-thread-pool-1/">
+            <time datetime="2019-04-16T09:53:31.000Z" itemprop="datePublished">2019-04-16</time>
+        </a>
+    </div>
+
+
+                        
+                        
+                    </div>
+                
+            </header>
         
         
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>工作中经常涉及异步任务，通常是使用多线程技术，比如线程池ThreadPoolExecutor，它的执行规则如下：</p>
-<p><img src="https://img2018.cnblogs.com/blog/871373/201904/871373-20190414211139904-821339818.png" alt></p>
-<p>在Springboot中对其进行了简化处理，只需要配置一个类型为java.util.concurrent.TaskExecutor或其子类的bean，并在配置类或直接在程序入口类上声明注解<code>@EnableAsync</code>。</p>
-<p>调用也简单，在<font color="red">由Spring管理的对象的方法上标注注解<code>@Async</code>，显式调用即可生效。</font></p>
-<p>一般使用Spring提供的ThreadPoolTaskExecutor类。</p>
-<h2 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@EnableAsync</span><br><span class="line">public class BeanConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public TaskExecutor taskExecutor() &#123;</span><br><span class="line">        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();</span><br><span class="line">        // 设置核心线程数</span><br><span class="line">        executor.setCorePoolSize(5);</span><br><span class="line">        // 设置最大线程数</span><br><span class="line">        executor.setMaxPoolSize(10);</span><br><span class="line">        // 设置队列容量</span><br><span class="line">        executor.setQueueCapacity(20);</span><br><span class="line">        // 设置线程活跃时间（秒）</span><br><span class="line">        executor.setKeepAliveSeconds(60);</span><br><span class="line">        // 设置默认线程名称</span><br><span class="line">        executor.setThreadNamePrefix(&quot;hello-&quot;);</span><br><span class="line">        // 设置拒绝策略</span><br><span class="line">        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());</span><br><span class="line">        // 等待所有任务结束后再关闭线程池</span><br><span class="line">        executor.setWaitForTasksToCompleteOnShutdown(true);</span><br><span class="line">        return executor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class Hello &#123;</span><br><span class="line">    @Async</span><br><span class="line">    public void sayHello(String name) &#123;</span><br><span class="line">        LoggerFactory.getLogger(Hello.class).info(name + &quot;:Hello World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p><img src="https://images2018.cnblogs.com/blog/871373/201804/871373-20180412224049311-1073700734.png" alt><br>从打印日志中可以看出线程池已经正常工作了。</p>
-<h2 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h2><p>有时候我们不止希望异步执行任务，还希望任务执行完成后会有一个返回值，在java中提供了Future泛型接口，用来接收任务执行结果，springboot也提供了此类支持，使用实现了ListenableFuture接口的类如AsyncResult来作为返回值的载体。比如上例中，我们希望返回一个类型为String类型的值，可以将返回值改造为:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Async</span><br><span class="line">public ListenableFuture&lt;String&gt; sayHello(String name) &#123;</span><br><span class="line">    String res = name + &quot;:Hello World!&quot;;</span><br><span class="line">    LoggerFactory.getLogger(Hello.class).info(res);</span><br><span class="line">    return new AsyncResult&lt;&gt;(res);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>调用返回值：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">private Hello hello;</span><br><span class="line"></span><br><span class="line">// 阻塞调用</span><br><span class="line">hello.sayHello(&quot;yan&quot;).get();</span><br><span class="line">// 限时调用</span><br><span class="line">hello.sayHello(&quot;yan&quot;).get(1, TimeUnit.SECONDS)</span><br></pre></td></tr></table></figure>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ol>
-<li>实际上，<code>@Async</code>还有一个参数，通过Bean名称来指定调用的线程池-比如上例中设置的线程池参数不满足业务需求，可以另外定义合适的线程池，调用时指明使用这个线程池-缺省时springboot会优先使用名称为’taskExecutor’的线程池，如果没有找到，才会使用其他类型为TaskExecutor或其子类的线程池。</li>
-<li>个人觉得这篇文章还不错：<a href="https://www.cnblogs.com/zedosu/p/6665306.html" target="_blank" rel="noopener">https://www.cnblogs.com/zedosu/p/6665306.html</a></li>
-</ol>
-
+            
         
         </div>
         <footer class="article-footer">
@@ -245,7 +248,7 @@
 
 </div>
 
-    <a data-url="https://cnblogs.com/yw0219/2019/04/16/simplify-usage-of-thread-pool/" data-id="cjujhwxzr00004k9bbyo8193i" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="https://cnblogs.com/yw0219/2019/04/16/simplify-usage-of-thread-pool-1/" data-id="cjujv90zq0001149b9mse8pli" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -313,7 +316,7 @@
 
             
     
-        <a href="https://cnblogs.com/yw0219/2019/04/16/simplify-usage-of-thread-pool/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://cnblogs.com/yw0219/2019/04/16/simplify-usage-of-thread-pool/">Comments</a>
+        <a href="https://cnblogs.com/yw0219/2019/04/16/simplify-usage-of-thread-pool-1/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://cnblogs.com/yw0219/2019/04/16/simplify-usage-of-thread-pool-1/">Comments</a>
     
 
         </footer>
@@ -349,7 +352,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/yw0219/2019/04/16/simplify-usage-of-thread-pool/" class="thumbnail">
+                            <a href="/yw0219/2019/04/16/simplify-usage-of-thread-pool-1/" class="thumbnail">
     
     
         <span class="thumbnail-image thumbnail-none"></span>
@@ -360,8 +363,8 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
-                            <p class="item-title"><a href="/yw0219/2019/04/16/simplify-usage-of-thread-pool/" class="title"></a></p>
-                            <p class="item-date"><time datetime="2019-04-16T07:47:02.238Z" itemprop="datePublished">2019-04-16</time></p>
+                            <p class="item-title"><a href="/yw0219/2019/04/16/simplify-usage-of-thread-pool-1/" class="title">simplify-usage-of-thread-pool</a></p>
+                            <p class="item-date"><time datetime="2019-04-16T09:53:31.000Z" itemprop="datePublished">2019-04-16</time></p>
                         </div>
                     </li>
                 
@@ -418,9 +421,9 @@
     <script>
     var disqus_config = function () {
         
-            this.page.url = 'https://cnblogs.com/yw0219/2019/04/16/simplify-usage-of-thread-pool/';
+            this.page.url = 'https://cnblogs.com/yw0219/2019/04/16/simplify-usage-of-thread-pool-1/';
         
-        this.page.identifier = 'simplify-usage-of-thread-pool';
+        this.page.identifier = 'simplify-usage-of-thread-pool-1';
     };
     (function() { 
         var d = document, s = d.createElement('script');  
